@@ -23,6 +23,7 @@ class WiFly : public Stream
 {
   public:
     WiFly(Stream *);
+    WiFly(Stream &);
 
     size_t write(uint8_t);
     size_t write(const uint8_t *, size_t);

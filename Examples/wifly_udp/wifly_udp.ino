@@ -16,7 +16,8 @@
 // Arduino       WiFly
 //  2    <---->    TX
 //  3    <---->    RX
-WiFly wifly(2, 3);
+SoftwareSerial uart(2, 3);
+WiFly wifly(uart);
 
 void setupUDP(const char *host_ip, uint16_t remote_port, uint16_t local_port)
 {
@@ -39,7 +40,8 @@ void setup() {
 
   Serial.begin(9600);
   Serial.println("--------- WIFLY UDP --------");
-
+  
+  uart.begin(9600);     // WiFly UART Baud Rate: 9600
   wifly.reset();
   
   while (1) {

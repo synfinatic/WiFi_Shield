@@ -17,7 +17,8 @@
 // Arduino       WiFly
 //  2    <---->    TX
 //  3    <---->    RX
-WiFly wifly(2, 3);
+SoftwareSerial uart(2, 3);
+WiFly wifly(uart);
 HTTPClient http;
 char get;
 
@@ -25,6 +26,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("------- WIFLY HTTP --------");
   
+  uart.begin(9600);     // WiFly UART Baud Rate: 9600
   // Wait WiFly to init
   // Wait WiFly to init
 //  delay(3000);

@@ -5,8 +5,8 @@
 #include <WiFly.h>
 #include "HTTPClient.h"
 
-#define SSID      "Your-SSID"
-#define KEY       "passphrase"
+#define SSID      "SEEED-MKT"
+#define KEY       "depot0510"
 // WIFLY_AUTH_OPEN / WIFLY_AUTH_WPA1 / WIFLY_AUTH_WPA1_2 / WIFLY_AUTH_WPA2_PSK
 #define AUTH      WIFLY_AUTH_WPA2_PSK
 
@@ -18,18 +18,20 @@
 // Arduino       WiFly
 //  2    <---->    TX
 //  3    <---->    RX
-WiFly wifly(2, 3);
+SoftwareSerial uart(2, 3);
+WiFly wifly(uart);
 HTTPClient http;
 char get;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600);    
   Serial.println("------- WIFLY HTTP --------");
   
+  
+  uart.begin(9600);         // WiFly UART Baud Rate: 9600
   // Wait WiFly to init
 //  delay(3000);
-//  wifly.reset();
-  
+
   // check if WiFly is associated with AP(SSID)
   if (!wifly.isAssociated(SSID)) {
     while (!wifly.join(SSID, KEY, AUTH)) {
@@ -40,6 +42,7 @@ void setup() {
     
     wifly.save();    // save configuration, 
   }
+
 
   Serial.println("\r\nTry to get url - " HTTP_GET_URL);
   Serial.println("------------------------------");

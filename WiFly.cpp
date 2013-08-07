@@ -15,6 +15,17 @@ WiFly::WiFly(Stream *serial)
   associated = false;
 }
 
+WiFly::WiFly(Stream &serial)
+{
+  instance = this;
+  this->serial = &serial;
+  
+  setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
+  
+  command_mode = false;
+  associated = false;
+}
+
 int WiFly::available()
 {
     return serial->available();

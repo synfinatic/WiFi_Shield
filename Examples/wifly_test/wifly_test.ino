@@ -23,6 +23,8 @@ void setup() {
   // wait for initilization of wifly
   delay(3000);
   
+  uart.begin(9600);     // WiFly UART Baud Rate: 9600
+  
   wifly.reset();
   
   Serial.println("Join " SSID );

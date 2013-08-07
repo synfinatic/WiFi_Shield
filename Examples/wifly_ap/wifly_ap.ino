@@ -9,11 +9,14 @@
 // Arduino       WiFly
 //  2    <---->    TX
 //  3    <---->    RX
-WiFly wifly(2, 3);
+SoftwareSerial uart(2, 3);
+WiFly wifly(uart);
 
 void setup() {
   Serial.begin(9600);
   Serial.println("--------- WIFLY AP --------");
+  
+  uart.begin(9600);     // WiFly UART Baud Rate: 9600
   
   float ver;
   Serial.print("WiFly Version: ");

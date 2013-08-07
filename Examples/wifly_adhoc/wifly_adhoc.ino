@@ -9,7 +9,12 @@
 #define UDP_REMOTE_PORT    55555
 #define UDP_LOCAL_PORT     55555
 
-WiFly wifly(2, 3);
+// Pins' connection
+// Arduino       WiFly
+//  2    <---->    TX
+//  3    <---->    RX
+SoftwareSerial uart(2, 3);
+WiFly wifly(uart);
 
 char cmd[32];
 char ip[24];
@@ -21,6 +26,8 @@ void setup() {
 
   Serial.begin(9600);
   Serial.println("--------- WiFly Ad-Hoc --------");
+  
+  uart.begin(9600);     // WiFly UART Baud Rate: 9600
   
   wifly.reset();
   
