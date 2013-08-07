@@ -30,9 +30,13 @@ class WiFly : public SoftwareSerial
     
     boolean init();
     boolean reset();
+    boolean save();
     boolean reboot();
     
+    boolean join(const char *ssid);
     boolean join(const char *ssid, const char *phrase = NULL, int auth = WIFLY_AUTH_OPEN);
+    boolean isAssociated();
+    boolean isAssociated(const char *ssid);
     boolean leave();
     
     boolean connect(const char *host, uint16_t port, int timeout = DEFAULT_WAIT_RESPONSE_TIME);

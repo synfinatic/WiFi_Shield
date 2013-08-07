@@ -28,20 +28,17 @@ void setup() {
   
   // Wait WiFly to init
 //  delay(3000);
+//  wifly.reset();
   
-  wifly.reset();
-
-  while (1) {
-    Serial.println("Try to join " SSID );
-    if (wifly.join(SSID, KEY, AUTH)) {
-      Serial.println("Succeed to join " SSID);
-      wifly.clear();
-      break;
-    } else {
+  // check if WiFly is associated with AP(SSID)
+  if (!wifly.isAssociated(SSID)) {
+    while (!wifly.join(SSID, KEY, AUTH)) {
       Serial.println("Failed to join " SSID);
-      Serial.println("Wait 1 second and try again...");
-      delay(1000);
+      Serial.println("Wait 0.1 second and try again...");
+      delay(100);
     }
+    
+    wifly.save();    // save configuration, 
   }
 
   Serial.println("\r\nTry to get url - " HTTP_GET_URL);

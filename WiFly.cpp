@@ -20,6 +20,11 @@ boolean WiFly::reset()
   return sendCommand("factory R\r", "Defaults");
 }
 
+boolean WiFly::save()
+{
+  return sendCommand("save\r", "AOK");
+}
+
 boolean WiFly::reboot()
 {
   sendCommand("reboot\r");
@@ -80,6 +85,15 @@ boolean WiFly::staticIP(const char *ip, const char *mask, const char *gateway)
   return result;
 }
 
+boolean WiFly::join(const char *ssid)
+{
+    char cmd[MAX_CMD_LEN];
+    
+    snprintf(cmd, sizeof(cmd), "join %s\r", ssid);
+    
+    return sendCommand(cmd, "ssociated");
+}
+
 boolean WiFly::join(const char *ssid, const char *phrase, int auth)
 {
   char cmd[MAX_CMD_LEN];
@@ -112,6 +126,22 @@ boolean WiFly::join(const char *ssid, const char *phrase, int auth)
 
   associated = true;
   return true;
+}
+
+boolean WiFly::isAssociated()
+{
+    // show net
+    return sendCommand("show n\r", "ssoc=OK");
+}
+
+boolean WiFly::isAssociated(const char *ssid)
+{
+    // show net
+    if (!sendCommand("show n\r", ssid)) {
+        return false;
+    }
+    
+    return find("ssoc=OK");
 }
 
 boolean WiFly::leave()
