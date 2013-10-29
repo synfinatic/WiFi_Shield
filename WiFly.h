@@ -21,59 +21,61 @@
 
 class WiFly : public Stream
 {
-  public:
+public:
     WiFly(Stream *);
     WiFly(Stream &);
 
     size_t write(uint8_t);
-    size_t write(const uint8_t *, size_t);
-    int available();
-    int read();
-    int peek();
-    void flush();
-	
-	static WiFly* getInstance() {
-	   return instance;
-	}
-    
+    virtual size_t write(const uint8_t *, size_t);
+    virtual int available();
+    virtual int read();
+    virtual int peek();
+    virtual void flush();
+
+    static WiFly *getInstance() {
+        return instance;
+    }
+
     boolean init();
     boolean reset();
     boolean save();
     boolean reboot();
-    
+
     boolean join(const char *ssid);
-    boolean join(const char *ssid, const char *phrase = NULL, int auth = WIFLY_AUTH_OPEN);
+    boolean join(const char *ssid, const char *phrase, int auth = WIFLY_AUTH_OPEN);
     boolean isAssociated();
     boolean isAssociated(const char *ssid);
     boolean leave();
-    
+
     boolean connect(const char *host, uint16_t port, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    boolean connect(int timeout = DEFAULT_WAIT_RESPONSE_TIME);
 
     boolean staticIP(const char *ip, const char *mask, const char *gateway);
-    
+
     int send(const char *data, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
     int send(const uint8_t *data, int len, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
     int receive(uint8_t *buf, int len, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
-    
+
     boolean ask(const char *q, const char *a, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
     boolean sendCommand(const char *cmd, const char *ack = NULL, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
-  
+
     boolean commandMode();
     boolean dataMode();
-    
+
     void clear();
 
     float version();
-    
-  private:
-    static WiFly*  instance;
 
-    Stream* serial;
-	
+private:
+    static WiFly  *instance;
+
+    Stream *serial;
+
     boolean command_mode;
     boolean associated;
     uint8_t dhcp;
-    
+    uint8_t error_count;
+
 };
 
 #endif // __WIFLY_H__
