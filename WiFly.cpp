@@ -159,11 +159,17 @@ boolean WiFly::join(const char *ssid, const char *phrase, int auth)
         sendCommand(cmd, "OK");
     }
 
-
-    //join the network
-    if (!sendCommand("join\r", "ssociated")) {
-        return false;
-    }
+    //join the network, it may needs 30 seconds!
+	int joinCounter = 0;
+	while(joinCounter++ < 3){
+		if(sendCommand("join\r", "Associated",DEFAULT_WAIT_RESPONSE_TIME*10)) {
+			break;
+		}
+		delay(DEFAULT_WAIT_RESPONSE_TIME);
+	}
+	if(joinCounter >=4){
+		return false;
+	}
 
     clear();
 
@@ -199,7 +205,8 @@ boolean WiFly::leave()
 
 boolean WiFly::connect(const char *host, uint16_t port, int timeout)
 {
-    char cmd[MAX_CMD_LEN];
+    char cmd[MAX_CMD_LEN];	
+	timeout = DEFAULT_WAIT_RESPONSE_TIME*5;
 #if 0
     snprintf(cmd, sizeof(cmd), "set d n %s\r", host);
     sendCommand(cmd, "OK");
@@ -295,9 +302,9 @@ boolean WiFly::ask(const char *q, const char *a, int timeout)
                 DBG(start);
                 DBG("\r\nEnd time: ");
                 DBG(end);
-                DBG("\r\n***** Probably ot enough memory *****\r\n");
+                DBG("\r\n***** Probably not enough memory *****\r\n");
             } else {
-                DBG("Timeout! ");
+                DBG("Time out! ");
             }
 
             return false;
