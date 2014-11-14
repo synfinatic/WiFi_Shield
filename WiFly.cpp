@@ -373,7 +373,7 @@ void WiFly::clear()
 
 float WiFly::version()
 {
-    if (!sendCommand("ver\r", "Ver ")) {
+    if (!sendCommand("ver\r", "Ver")) {
         return -1;
     }
 
@@ -381,11 +381,16 @@ float WiFly::version()
     int read_bytes;
     read_bytes = receive((uint8_t *)buf, 48 - 1);
     buf[read_bytes] = '\0';
+    
+    char *ptr = buf;
+    while (*ptr < '0' || *ptr > '9') {
+        ptr++;
+    }
 
     float version;
-    version = atof(buf);
+    version = atof(ptr);
     if (version == 0) {
-        char *ptr = strchr(buf, '<');
+        ptr = strchr(ptr, '<');
         if (ptr != NULL) {
             version = atof(ptr + 1);
         }
