@@ -4,10 +4,9 @@
 
 WiFly *WiFly::instance;
 
-WiFly::WiFly(Stream *serial)
+WiFly::WiFly(AnySerial &port) : serial(port)
 {
     instance = this;
-    this->serial = serial;
 
     setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
 
@@ -16,45 +15,46 @@ WiFly::WiFly(Stream *serial)
     error_count = 0;
 }
 
-WiFly::WiFly(Stream &serial)
+WiFly::WiFly(AnySerial *port)
 {
     instance = this;
-    this->serial = &serial;
-
+    serial = *port;
     setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
 
     command_mode = false;
     associated = false;
+    error_count = 0;
 }
+
 
 int WiFly::available()
 {
-    return serial->available();
+    return serial.available();
 }
 
 int WiFly::read()
 {
-    return serial->read();
+    return serial.read();
 }
 
 int WiFly::peek()
 {
-    return serial->peek();
+    return serial.peek();
 }
 
 void WiFly::flush()
 {
-    return serial->flush();
+    return serial.flush();
 }
 
 size_t WiFly::write(uint8_t c)
 {
-    return serial->write(c);
+    return serial.write(c);
 }
 
 size_t WiFly::write(const uint8_t *buffer, size_t size)
 {
-    return serial->write(buffer, size);
+    return serial.write(buffer, size);
 }
 
 boolean WiFly::reset()
@@ -203,7 +203,7 @@ boolean WiFly::leave()
     return false;
 }
 
-boolean WiFly::connect(const char *host, uint16_t port, int timeout)
+boolean WiFly::connect(const char *host, uint16_t port, unsigned int timeout)
 {
     char cmd[MAX_CMD_LEN];	
 	timeout = DEFAULT_WAIT_RESPONSE_TIME*5;
@@ -231,7 +231,7 @@ boolean WiFly::connect(const char *host, uint16_t port, int timeout)
     return true;
 }
 
-boolean WiFly::connect(int timeout)
+boolean WiFly::connect(unsigned int timeout)
 {
     if (!sendCommand("open\r", "*OPEN*", timeout)) {
         command_mode = false;
@@ -244,7 +244,7 @@ boolean WiFly::connect(int timeout)
     return true;
 }
 
-int WiFly::send(const uint8_t *data, int len, int timeout)
+int WiFly::send(const uint8_t *data, int len, unsigned int timeout)
 {
     int write_bytes = 0;
     boolean write_error = false;
@@ -273,12 +273,12 @@ int WiFly::send(const uint8_t *data, int len, int timeout)
     return write_bytes;
 }
 
-int WiFly::send(const char *data, int timeout)
+int WiFly::send(const char *data, unsigned int timeout)
 {
-    send((uint8_t *)data, strlen(data), timeout);
+    return send((uint8_t *)data, strlen(data), timeout);
 }
 
-boolean WiFly::ask(const char *q, const char *a, int timeout)
+boolean WiFly::ask(const char *q, const char *a, unsigned int timeout)
 {
     unsigned long start;
     unsigned long end;
@@ -314,7 +314,7 @@ boolean WiFly::ask(const char *q, const char *a, int timeout)
     return true;
 }
 
-boolean WiFly::sendCommand(const char *cmd, const char *ack, int timeout)
+boolean WiFly::sendCommand(const char *cmd, const char *ack, unsigned int timeout)
 {
     DBG("CMD: ");
     DBG(cmd);
@@ -401,7 +401,7 @@ float WiFly::version()
 
 
 
-int WiFly::receive(uint8_t *buf, int len, int timeout)
+int WiFly::receive(uint8_t *buf, int len, unsigned int timeout)
 {
     int read_bytes = 0;
     int ret;

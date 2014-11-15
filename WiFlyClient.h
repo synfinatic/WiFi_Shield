@@ -6,7 +6,7 @@
 #include "Client.h"
 #include "IPAddress.h"
 #include "WiFly.h"
-#include "SoftwareSerial.h"
+#include "AnySerial.h"
 
 //use pin2/3 as Serial
 #define PIN_TX			2
@@ -16,7 +16,7 @@
 
 class WiFlyClient : public Client{
 public:
-	WiFlyClient():wifiSerial(PIN_TX,PIN_RX),_WiFly(&wifiSerial){
+	WiFlyClient(AnySerial &port) : wifiSerial(port), _WiFly(&wifiSerial) {
 		wifiSerial.begin(SERIAL_BAUDRATE);
 	};
 	boolean join(const char *ssid, const char *phrase, int auth);
@@ -34,7 +34,7 @@ public:
 	operator bool();
 	using Print::write;
 private:
-	SoftwareSerial wifiSerial;
+	AnySerial wifiSerial;
 	WiFly _WiFly;
 };
 

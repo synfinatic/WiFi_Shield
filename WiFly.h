@@ -19,11 +19,13 @@
 #define WIFLY_AUTH_WPA2_PSK    4    // WPA2-PSK
 #define WIFLY_AUTH_ADHOC       6    // Ad-hoc, join any Ad-hoc network
 
-class WiFly : public Stream
+#include <AnySerial.h>
+
+class WiFly : public AnySerial
 {
 public:
-    WiFly(Stream *);
-    WiFly(Stream &);
+    WiFly(AnySerial &);
+    WiFly(AnySerial *);
 
     size_t write(uint8_t);
     virtual size_t write(const uint8_t *, size_t);
@@ -47,17 +49,17 @@ public:
     boolean isAssociated(const char *ssid);
     boolean leave();
 
-    boolean connect(const char *host, uint16_t port, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
-    boolean connect(int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    boolean connect(const char *host, uint16_t port, unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    boolean connect(unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
 
     boolean staticIP(const char *ip, const char *mask, const char *gateway);
 
-    int send(const char *data, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
-    int send(const uint8_t *data, int len, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
-    int receive(uint8_t *buf, int len, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    int send(const char *data, unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    int send(const uint8_t *data, int len, unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    int receive(uint8_t *buf, int len, unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
 
-    boolean ask(const char *q, const char *a, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
-    boolean sendCommand(const char *cmd, const char *ack = NULL, int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    boolean ask(const char *q, const char *a, unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
+    boolean sendCommand(const char *cmd, const char *ack = NULL, unsigned int timeout = DEFAULT_WAIT_RESPONSE_TIME);
 
     boolean commandMode();
     boolean dataMode();
@@ -69,7 +71,7 @@ public:
 private:
     static WiFly  *instance;
 
-    Stream *serial;
+    AnySerial serial;
 
     boolean command_mode;
     boolean associated;
