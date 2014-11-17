@@ -8,7 +8,7 @@ WiFly::WiFly(AnySerial &port) : serial(port)
 {
     instance = this;
 
-    setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
+    serial.setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
 
     command_mode = false;
     associated = false;
@@ -19,7 +19,7 @@ WiFly::WiFly(AnySerial *port)
 {
     instance = this;
     serial = *port;
-    setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
+    serial.setTimeout(DEFAULT_WAIT_RESPONSE_TIME);
 
     command_mode = false;
     associated = false;
@@ -191,7 +191,7 @@ boolean WiFly::isAssociated(const char *ssid)
         return false;
     }
 
-    return find("soc=O");
+    return serial.find("soc=O");
 }
 
 boolean WiFly::leave()
@@ -254,7 +254,7 @@ int WiFly::send(const uint8_t *data, int len, unsigned int timeout)
         return 0;
     }
     while (write_bytes < len) {
-        if (write(data[write_bytes]) == 1) {
+        if (serial.write(data[write_bytes]) == 1) {
             write_bytes++;
             write_error = false;
         } else {         // failed to write, set timeout
@@ -286,9 +286,9 @@ boolean WiFly::ask(const char *q, const char *a, unsigned int timeout)
     send((uint8_t *)q, q_len, timeout);
 
     if (a != NULL) {
-        setTimeout(timeout);
+        serial.setTimeout(timeout);
         start = millis();
-        boolean found = find((char *)a);
+        boolean found = serial.find((char *)a);
         if (!found) {
             end = millis();
             if ((end - start) < timeout) {
