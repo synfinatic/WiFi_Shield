@@ -1,9 +1,11 @@
-# WiFi Library Using WiFly 171 for Arduino
+# WiFi Library Using WiFly 171 for Arduino and compatibles
 
-This library is for [WiFi Shield](http://www.seeedstudio.com/depot/wifi-shield-p-1220.html?cPath=19_20) from [Seeed Studio](http://seeedstudio.com).
+This library was originally for the [WiFi Shield](http://www.seeedstudio.com/depot/wifi-shield-p-1220.html?cPath=19_20)
+from [Seeed Studio](http://seeedstudio.com), but I've modified it to work with
+other Arduino and compatible boards like the [Teensy](http://pjrc.com/store/teensy31.html).
 
 ## Features
-+ Support Hardware and Software Serial
++ Supports any serial port, including software serial via the [AnySerial](https://github.com/synfinatic/AnySerial) library.
 + HTTP client
 + as an Access Point
 
@@ -13,8 +15,3 @@ This library is for [WiFi Shield](http://www.seeedstudio.com/depot/wifi-shield-p
 + setup WiFi AP
 + join Ad-Hoc network
 + UDP communication
-
-
-
-
-[![Analytics](https://ga-beacon.appspot.com/UA-46589105-3/WiFi_Shield)](https://github.com/igrigorik/ga-beacon)
